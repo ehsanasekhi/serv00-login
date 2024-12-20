@@ -47,7 +47,7 @@ async def login(username, password, panel):
         if login_button:
             await login_button.click()
         else:
-            raise Exception('无法找到登录按钮')
+            raise Exception('Unable to find the login button')
 
         await page.waitForNavigation()
 
@@ -59,7 +59,7 @@ async def login(username, password, panel):
         return is_logged_in
 
     except Exception as e:
-        print(f'{serviceName}账号 {username} 登录时出现错误: {e}')
+        print(f'{serviceName}account {username} Error logging in: {e}')
         return False
 
     finally:
@@ -80,7 +80,7 @@ async def main():
             accounts_json = await f.read()
         accounts = json.loads(accounts_json)
     except Exception as e:
-        print(f'读取 accounts.json 文件时出错: {e}')
+        print(f'Error reading accounts.json file: {e}')
         return
 
     for account in accounts:
@@ -93,31 +93,31 @@ async def main():
 
         now_beijing = format_to_iso(datetime.utcnow() + timedelta(hours=8))
         if is_logged_in:
-            message += f"✅*{serviceName}*账号 *{username}* 于北京时间 {now_beijing}登录面板成功！\n\n"
-            print(f"{serviceName}账号 {username} 于北京时间 {now_beijing}登录面板成功！")
+            message += f"✅*{serviceName}*account *{username}* At Beijing time {now_beijing}Login panel successfully！\n\n"
+            print(f"{serviceName}account {username} At Beijing time {now_beijing}Login panel successfull！")
         else:
-            message += f"❌*{serviceName}*账号 *{username}* 于北京时间 {now_beijing}登录失败\n\n❗请检查*{username}*账号和密码是否正确。\n\n"
-            print(f"{serviceName}账号 {username} 登录失败，请检查{serviceName}账号和密码是否正确。")
+            message += f"❌*{serviceName}*account *{username}* At Beijing time {now_beijing}Login Failed\n\n❗please check*{username}*Are the account and password correct?。\n\n"
+            print(f"{serviceName}account {username} Login Failed，please check{serviceName}Are the account and password correct?。")
 
         delay = random.randint(1000, 8000)
         await delay_time(delay)
         
-    message += f"🔚脚本结束，如有异常点击下方按钮👇"
+    message += f"🔚The script ends. If there is any abnormality, click the button below👇"
     await send_telegram_message(message)
-    print(f'所有{serviceName}账号登录完成！')
+    print(f'all{serviceName}Account login completed！')
     # 退出时关闭浏览器
     await shutdown_browser()
 
 async def send_telegram_message(message):
     # 使用 Markdown 格式
     formatted_message = f"""
-*🎯 serv00&ct8自动化保号脚本运行报告*
+*🎯 serv00&ct8 automated number reservation script operation report*
 
-🕰 *北京时间*: {format_to_iso(datetime.utcnow() + timedelta(hours=8))}
+🕰 *Beijing Time*: {format_to_iso(datetime.utcnow() + timedelta(hours=8))}
 
-⏰ *UTC时间*: {format_to_iso(datetime.utcnow())}
+⏰ *UTC time*: {format_to_iso(datetime.utcnow())}
 
-📝 *任务报告*:
+📝 *Mission Report*:
 
 {message}
 
@@ -132,7 +132,7 @@ async def send_telegram_message(message):
             'inline_keyboard': [
                 [
                     {
-                        'text': '问题反馈❓',
+                        'text': 'Question Feedback❓',
                         'url': 'https://t.me/yxjsjl'  # 点击按钮后跳转到问题反馈的链接
                     }
                 ]
@@ -146,9 +146,9 @@ async def send_telegram_message(message):
     try:
         response = requests.post(url, json=payload, headers=headers)
         if response.status_code != 200:
-            print(f"发送消息到Telegram失败: {response.text}")
+            print(f"Failed to send message to Telegram: {response.text}")
     except Exception as e:
-        print(f"发送消息到Telegram时出错: {e}")
+        print(f"Error sending message to Telegram: {e}")
 
 if __name__ == '__main__':
     asyncio.run(main())
